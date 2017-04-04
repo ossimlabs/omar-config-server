@@ -65,6 +65,7 @@ dependencyManagement {
 	}
 }
 
+
 def getCurrentGitBranch() {
     def gitBranch = "Unknown branch"
     try {
@@ -104,6 +105,7 @@ ext {
   installOssim = true
 }
 version "${buildVersion}-${buildVersionTag}"
+
 
 task logIn () {
   doLast {
@@ -210,6 +212,30 @@ task doAll(dependsOn: dockerImageToS3, overwrite:true) {
 }
 
 
+artifactory {
+  contextUrl = "${artifactoryContextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
+  publish {
+    repository {
+      repoKey = "omar-local"
+      username = "${artifactoryUser}"
+      password = "${artifactoryPassword}"
+      maven = true
+    }
+    defaults{
+      publications("mavenJava")
+    }
+  }
+  resolve {
+    repository {
+      repoKey = "omar-local"
+      username = "${artifactoryUser}"
+      password = "${artifactoryPassword}"
+      maven = true
+    }
+  }
+}
+artifactoryPublish.dependsOn.add("assemble")
+
 publishing {
   publications {
     mavenJava(MavenPublication) {
@@ -217,3 +243,4 @@ publishing {
     }
   }
 }
+
