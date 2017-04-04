@@ -61,7 +61,7 @@ task createDockerfile(type: Dockerfile, overwrite:true){
   //environmentVariable "SPRING_CLOUD_CONFIG_ENABLED","true"
   //environmentVariable "SPRING_CLOUD_DISCOVERY_ENABLED","true"
   exposePort 8888
-  defaultCommand 'java', '-server', '-Xms256m', '-Xmx1024m', '-Djava.awt.headless=true', '-XX:+CMSClassUnloadingEnabled', '-XX:+UseGCOverheadLimit', '-Djava.security.egd=file:/dev/./urandom', '-jar', /usr/share/jarName
+  defaultCommand 'java', '-server', '-Xms256m', '-Xmx1024m', '-Djava.awt.headless=true', '-XX:+CMSClassUnloadingEnabled', '-XX:+UseGCOverheadLimit', '-Djava.security.egd=file:/dev/./urandom', '-jar', "/usr/share/${jarName}"
 }
 
 task buildDockerImage(type: DockerBuildImage, overwrite:true) {
