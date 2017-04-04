@@ -66,12 +66,6 @@ task createDockerfile(type: Dockerfile, overwrite:true){
   from "${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}"
   maintainer "DigitalGlobe-RadiantBlue"
   copyFile jarName, "/usr/share"
-  //runCommand 'useradd omar'
-  //copyFile jarName, "/home/omar"
-  //user 'omar'
-  //workingDir '/home/omar'
-  //environmentVariable "SPRING_CLOUD_CONFIG_ENABLED","true"
-  //environmentVariable "SPRING_CLOUD_DISCOVERY_ENABLED","true"
   exposePort 8888
   defaultCommand 'java', '-server', '-Xms256m', '-Xmx1024m', '-Djava.awt.headless=true', '-XX:+CMSClassUnloadingEnabled', '-XX:+UseGCOverheadLimit', '-Djava.security.egd=file:/dev/./urandom', '-jar', "/usr/share/${jarName}"
 }
