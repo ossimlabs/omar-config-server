@@ -153,7 +153,7 @@ task logIn () {
 task createDockerfile(type: Dockerfile, overwrite:true){
   def jarName = "${project.name}-${buildVersion}-${buildVersionTag}.jar"
 
-  destFile = project.file('docker/Dockerfile')
+  destFile = project.file('build/libs/Dockerfile')
   from "${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}"
   maintainer "DigitalGlobe-RadiantBlue"
   copyFile jarName, "/usr/share"
