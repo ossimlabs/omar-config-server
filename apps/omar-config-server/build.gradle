@@ -46,6 +46,74 @@ dependencyManagement {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.SR7"
 	}
 }
+
+task createDockerfile(type: Dockerfile, overwrite:true){
+  def jarName = "${project.name}-${buildVersion}-${buildVersionTag}.jar"
+
+  destFile = project.file('build/libs/Dockerfile')
+  from "${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}"
+  maintainer "DigitalGlobe-RadiantBlue"
+  copyFile jarName, "/usr/share"
+  //runCommand 'useradd omar'
+  //copyFile jarName, "/home/omar"
+  //user 'omar'
+  //workingDir '/home/omar'
+  //environmentVariable "SPRING_CLOUD_CONFIG_ENABLED","true"
+  //environmentVariable "SPRING_CLOUD_DISCOVERY_ENABLED","true"
+  exposePort 8888
+  defaultCommand 'java', '-server', '-Xms256m', '-Xmx1024m', '-Djava.awt.headless=true', '-XX:+CMSClassUnloadingEnabled', '-XX:+UseGCOverheadLimit', '-Djava.security.egd=file:/dev/./urandom', '-jar', /usr/share/jarName
+}
+
+task buildDockerImage(type: DockerBuildImage, overwrite:true) {
+  dependsOn createDockerfile
+  dependsOn logIn 
+  inputDir = createDockerfile.destFile.parentFile
+  tag = "${image}"
+}
+task tagDockerImage(type: DockerTagImage, dependsOn: buildDockerImage, overwrite:true) {
+  imageId "${image}"
+  tag "${dockerAppTag}"
+  repository  "${dockerNamespaceUrl}${project.name}"
+}
+
+task pushDockerImage(type: DockerPushImage, overwrite:true){
+
+  dependsOn tagDockerImage
+  
+  imageName "${dockerNamespaceUrl}${image}"
+}
+
+task saveDockerImage(dependsOn: pushDockerImage, overwrite:true) {
+  doLast {
+    exec {
+      commandLine 'docker', 'save', image, '-o', "${project.name}.tgz"
+    }
+  }
+}
+
+// Uses the S3 plugin to push the .tgz file to the ossimlabs
+task dockerImageToS3(type: com.github.skhatri.s3aws.plugin.S3UploadTask, dependsOn: saveDockerImage, overwrite:true) {
+  bucket = 'o2-delivery/dev/docker'
+  key = "${imageTgz}"
+  file = project.file("${imageTgz}").toString()
+}
+
+task doAll(dependsOn: dockerImageToS3, overwrite:true) {
+  doLast{
+    exec {
+      // Removes the image that is pushed to the remote repository
+      // from the local Docker registry
+      commandLine 'docker', 'rmi', "-f", "${dockerNamespaceUrl}${image}"
+    }
+    exec {
+      // Removes the default image created during the build process from
+      // from the local Docker registry
+      commandLine 'docker', 'rmi', "-f", image
+    }
+  }
+}
+
+
 publishing {
   publications {
     mavenJava(MavenPublication) {
