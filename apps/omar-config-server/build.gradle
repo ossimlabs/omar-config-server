@@ -3,6 +3,7 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
+
 buildscript {
 	ext {
 	  springBootVersion = '1.4.0.RELEASE'
@@ -16,17 +17,23 @@ buildscript {
       mavenLocal()
       maven { url "${ossimMavenProxy}" }
       mavenCentral()
+      maven {
+        url "https://plugins.gradle.org/m2/"
+      }
 	}
 	dependencies {
         classpath 'com.bmuschko:gradle-docker-plugin:3.0.6'
         classpath 'com.github.skhatri:gradle-s3-plugin:1.0.4'
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
 
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: "com.github.skhatri.s3aws.plugin.S3Plugin"
+apply plugin: "org.jfrog.gradle.plugin.artifactory.ArtifactoryPlugin"
 apply plugin: "java"
 apply plugin: "maven-publish"
 apply plugin: "maven"
