@@ -24,6 +24,7 @@ buildscript {
 	dependencies {
         classpath 'com.bmuschko:gradle-docker-plugin:3.0.6'
         classpath 'com.github.skhatri:gradle-s3-plugin:1.0.4'
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
 		    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
@@ -31,9 +32,6 @@ buildscript {
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
-apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
-apply plugin: "com.github.skhatri.s3aws.plugin.S3Plugin"
-apply plugin: "org.jfrog.gradle.plugin.artifactory.ArtifactoryPlugin"
 apply plugin: "java"
 apply plugin: "maven-publish"
 apply plugin: "maven"
