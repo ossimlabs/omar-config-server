@@ -1,20 +1,15 @@
-import com.bmuschko.gradle.docker.tasks.image.Dockerfile
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
-import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
 
 buildscript {
 	ext {
 	  springBootVersion = '1.4.0.RELEASE'
      baseImage = "omar-base"
-        artifactoryContextUrl="https://artifacts.radiantbluecloud.com/artifactory"
-        ossimMavenProxy="${artifactoryContextUrl}/ossim-deps"
+     ports = 8888
+     runAsRoot=true
 	}
-//  if(System.env.OMAR_COMMON_PROPERTIES)
-//  {
-//    apply from: System.env.OMAR_COMMON_PROPERTIES
-//  }
+  if(System.env.OMAR_COMMON_PROPERTIES)
+  {
+   apply from: System.env.OMAR_COMMON_PROPERTIES
+  }
  	repositories {
       mavenLocal()
       maven { url "${ossimMavenProxy}" }
@@ -33,10 +28,6 @@ buildscript {
 
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
-apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
-apply plugin: com.github.skhatri.s3aws.plugin.S3Plugin
-apply plugin: org.jfrog.gradle.plugin.artifactory.ArtifactoryPlugin
-
 apply plugin: 'spring-boot'
 apply plugin: "java"
 apply plugin: "maven-publish"
@@ -65,177 +56,6 @@ dependencyManagement {
 	}
 }
 
-
-def getCurrentGitBranch() {
-    def gitBranch = "Unknown branch"
-    try {
-        def workingDir = new File("${project.projectDir}")
-        def result = 'git rev-parse --abbrev-ref HEAD'.execute(null, workingDir)
-        result.waitFor()
-        if (result.exitValue() == 0) {
-            gitBranch = result.text.trim()
-        }
-    } catch (e) {
-    }
-    return gitBranch
-}
-def gitBranch=getCurrentGitBranch()
-
-ext {
-  buildVersionTag=gitBranch=="dev"?"SNAPSHOT":"RELEASE"//"SNAPSHOT" // SNAPSHOT or RELEASE
-  jarArtifactsChanging="${buildVersionTag}" == "SNAPSHOT" ? true:false
-  artifactoryUser="${System.env.ARTIFACTORY_USER}"
-  artifactoryPassword="${System.env.ARTIFACTORY_PASSWORD}"
-
-  openShiftUrl="https://openshift-master.ossim.io:8443"
-  yumTag=(buildVersionTag=="SNAPSHOT"?"dev":"master")
-  dockerAppTag=(buildVersionTag=="SNAPSHOT"?"latest":"release")
-
-  dockerRegistryUrl="docker-registry-default.ossim.io"
-  registryProjectName="o2"
-
-  openShiftUserName="${System.env.OPENSHIFT_USERNAME}"
-  openShiftPassword="${System.env.OPENSHIFT_PASSWORD}"
-
-  dockerNamespaceUrl = "${dockerRegistryUrl}/${registryProjectName}/"
-
-  image = "${project.name}:${dockerAppTag}"
-  imageTgz = "${project.name}.tgz"
-
-  installOssim = true
-}
-version "${buildVersion}-${buildVersionTag}"
-
-
-task logIn () {
-  doLast {
-    def login = false
-    def count = 0
-    def numRetries = 3
-    def sleepMillis = 1000
-    while(!login && count < numRetries){
-      try{
-        exec {
-          commandLine 'oc', 'login', '--insecure-skip-tls-verify', openShiftUrl,
-           '-u', openShiftUserName,
-           '-p', openShiftPassword
-        }
-        login = true
-      }
-      catch(e){
-
-        println 'Openshift login failed!'
-        count++
-        if(count < numRetries){
-          Thread.sleep(sleepMillis)
-        }
-        else {
-          throw(e)
-        }
-      }
-    }
-
-    def loginTokenStream = new ByteArrayOutputStream()
-    exec {
-      commandLine 'oc', 'whoami', '-t'
-      standardOutput loginTokenStream
-    }
-
-    def loginToken = new String(loginTokenStream.toByteArray(), 'UTF-8')?.trim()
-    println loginToken
-    exec {
-     commandLine 'docker', 'login', '-p', loginToken, '-u', 'unused', dockerRegistryUrl
-    }
-  }
-}
-
-
-task createDockerfile(type: Dockerfile, overwrite:true){
-  def jarName = "${project.name}-${buildVersion}-${buildVersionTag}.jar"
-
-  destFile = project.file('build/libs/Dockerfile')
-  from "${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}"
-  maintainer "DigitalGlobe-RadiantBlue"
-  copyFile jarName, "/usr/share"
-  exposePort 8888
-  defaultCommand 'java', '-server', '-Xms256m', '-Xmx1024m', '-Djava.awt.headless=true', '-XX:+CMSClassUnloadingEnabled', '-XX:+UseGCOverheadLimit', '-Djava.security.egd=file:/dev/./urandom', '-jar', "/usr/share/${jarName}"
-}
-
-task buildDockerImage(type: DockerBuildImage, overwrite:true) {
-  dependsOn createDockerfile
-  dependsOn logIn 
-  inputDir = createDockerfile.destFile.parentFile
-  tag = "${image}"
-}
-
-task tagDockerImage(type: DockerTagImage, dependsOn: buildDockerImage, overwrite:true) {
-  imageId "${image}"
-  tag "${dockerAppTag}"
-  repository  "${dockerNamespaceUrl}${project.name}"
-}
-
-task pushDockerImage(type: DockerPushImage, overwrite:true){
-
-  dependsOn tagDockerImage
-  
-  imageName "${dockerNamespaceUrl}${image}"
-}
-
-task saveDockerImage(dependsOn: pushDockerImage, overwrite:true) {
-  doLast {
-    exec {
-      commandLine 'docker', 'save', image, '-o', "${project.name}.tgz"
-    }
-  }
-}
-
-// Uses the S3 plugin to push the .tgz file to the ossimlabs
-task dockerImageToS3(type: com.github.skhatri.s3aws.plugin.S3UploadTask, dependsOn: saveDockerImage, overwrite:true) {
-  bucket = 'o2-delivery/dev/docker'
-  key = "${imageTgz}"
-  file = project.file("${imageTgz}").toString()
-}
-
-task doAll(dependsOn: dockerImageToS3, overwrite:true) {
-  doLast{
-    exec {
-      // Removes the image that is pushed to the remote repository
-      // from the local Docker registry
-      commandLine 'docker', 'rmi', "-f", "${dockerNamespaceUrl}${image}"
-    }
-    exec {
-      // Removes the default image created during the build process from
-      // from the local Docker registry
-      commandLine 'docker', 'rmi', "-f", image
-    }
-  }
-}
-
-
-artifactory {
-  contextUrl = "${artifactoryContextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
-  publish {
-    repository {
-      repoKey = "omar-local"
-      username = "${artifactoryUser}"
-      password = "${artifactoryPassword}"
-      maven = true
-    }
-    defaults{
-      publications("mavenJava")
-    }
-  }
-  resolve {
-    repository {
-      repoKey = "omar-local"
-      username = "${artifactoryUser}"
-      password = "${artifactoryPassword}"
-      maven = true
-    }
-  }
-}
-artifactoryPublish.dependsOn.add("assemble")
-
 publishing {
   publications {
     mavenJava(MavenPublication) {
@@ -243,4 +63,3 @@ publishing {
     }
   }
 }
-
