@@ -10,7 +10,7 @@ buildscript {
           "MAINTAINER RadiantBlue Technologies radiantblue.com",
           """LABEL com.radiantblue.version="" """,
           "RUN yum -y install java-1.8.0-openjdk-devel",
-          "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar, /usr/share",
+          "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar /usr/share",
           "VOLUME /dev/random /home /Users",
           "EXPOSE 8888",
           "CMD java -Xms256m -Xmx1024m -Dspring.profiles.active=production -Djava.security.egd=file:/dev/./urandom -Dserver.contextPath=/omar-config-server -jar /usr/share/${project.name}-${buildVersion}-${buildVersionTag}.jar"
