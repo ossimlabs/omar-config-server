@@ -8,7 +8,7 @@ buildscript {
           "FROM ${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}",
           "MAINTAINER DigitalGlobe-RadiantBlue",
           """LABEL com.digitalglobe.version="" """,
-					"COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar /home/omar",
+					"COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar /home/omar/",
           "VOLUME /dev/random /home /Users",
           "EXPOSE 8888",
           "CMD java -Xms256m -Xmx1024m -Dspring.profiles.active=production -Djava.security.egd=file:/dev/./urandom -Dserver.contextPath=/omar-config-server -jar /home/omar/${project.name}-${buildVersion}-${buildVersionTag}.jar"
