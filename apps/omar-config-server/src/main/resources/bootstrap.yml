@@ -9,3 +9,13 @@ spring:
           uri: https://github.com/radiantbluetechnologies/config-repo
           username: ${GIT_USER_NAME}
           password: ${GIT_PASSWORD}
+
+---
+spring:
+  profiles: local
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations: file://home/omar/configs
