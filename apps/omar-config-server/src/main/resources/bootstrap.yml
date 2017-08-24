@@ -2,10 +2,10 @@ server:
   port: 8888
   contextPath: /omar-config-server
 spring:
-  profiles:
-    active: native
   cloud:
     config:
       server:
-        native:
-          searchLocations: file://home/omar/configs
+        git:
+          uri: https://github.com/radiantbluetechnologies/config-repo
+          username: ${GIT_USER_NAME}
+          password: ${GIT_PASSWORD}
