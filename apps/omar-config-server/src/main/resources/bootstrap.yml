@@ -1,6 +1,8 @@
 server:
   port: 8888
   contextPath: /omar-config-server
+---
+
 spring:
   cloud:
     config:
@@ -11,6 +13,7 @@ spring:
           password: ${GIT_PASSWORD}
 
 ---
+
 spring:
   profiles: local
     active: native
