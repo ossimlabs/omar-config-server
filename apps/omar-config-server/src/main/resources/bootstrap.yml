@@ -8,4 +8,4 @@ spring:
     config:
       server:
         native:
-          searchLocations: file:/home/omar/configs
+          searchLocations: file:/home/omar/configs/,file:/home/omar/configs/{application},file:/home/omar/configs/{application}/{profile}
