@@ -10,7 +10,7 @@ buildscript {
 	        "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar \$HOME/",
           "EXPOSE 8888",
           "WORKDIR \$HOME",
-          "CMD java -Xms256m -Xmx1024m -Dspring.profiles.active=production -Djava.security.egd=file:/dev/./urandom -Dserver.contextPath=/omar-config-server -jar ./${project.name}-${buildVersion}-${buildVersionTag}.jar"
+          "CMD java -Xms256m -Xmx1024m -Djava.security.egd=file:/dev/./urandom -Dserver.contextPath=/omar-config-server -jar ./${project.name}-${buildVersion}-${buildVersionTag}.jar"
           ]
      }
 	}

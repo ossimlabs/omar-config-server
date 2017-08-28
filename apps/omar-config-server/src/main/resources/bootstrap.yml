@@ -2,6 +2,8 @@ server:
   port: 8888
   contextPath: /omar-config-server
 spring:
+  profiles:
+    active: native
   cloud:
     config:
       server:
