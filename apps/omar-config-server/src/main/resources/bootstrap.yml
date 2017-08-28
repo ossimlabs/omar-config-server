@@ -9,3 +9,15 @@ spring:
       server:
         native:
           searchLocations: file:${HOME}/configs/,file:${HOME}/configs/{application},file:${HOME}/configs/{application}/{profile}
+
+---
+
+spring:
+  profiles: remote
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/radiantbluetechnologies/config-repo
+          username: ${GIT_USER_NAME}
+          password: ${GIT_PASSWORD}
