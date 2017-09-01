@@ -3,17 +3,10 @@
 ## Dockerfile
 ```
 FROM omar-base
-RUN mkdir /usr/share/omar
-COPY omar-config-server-1.0.0-SNAPSHOT.jar /usr/share/omar
-RUN chown -R 1001:0 /usr/share/omar
-RUN chown 1001:0 /usr/share/omar
-RUN chmod -R g+rw /usr/share/omar
-RUN find $HOME -type d -exec chmod g+x {} +
-USER 1001
-WORKDIR /usr/share/omar
-VOLUME /dev/random /home /Users
+COPY omar-config-server-1.2.0-SNAPSHOT.jar /home/omar
+WORKDIR /home/omar
 EXPOSE 8888
-CMD java -Xms256m -Xmx1024m -Dspring.profiles.active=production -Djava.security.egd=file:/dev/./urandom -Dserver.contextPath=/omar-config-server -jar /usr/share/omar/omar-config-server-1.0.0-SNAPSHOT.jar
+CMD java -Xms256m -Xmx1024m -Djava.security.egd=file:/dev/./urandom -jar /usr/share/omar/omar-config-server-1.2.0-SNAPSHOT.jar
 ```
 Ref: [omar-base](../../../omar-base/docs/install-guide/omar-base/)
 
