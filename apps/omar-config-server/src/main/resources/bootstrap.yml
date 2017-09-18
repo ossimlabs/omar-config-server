@@ -2,6 +2,18 @@ server:
   port: 8888
   contextPath: /omar-config-server
 spring:
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations: file:${HOME}/configs/,file:${HOME}/configs/{application},file:${HOME}/configs/{application}/{profile}
+
+---
+
+spring:
+  profiles: remote
   cloud:
     config:
       server:
