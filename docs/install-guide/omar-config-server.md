@@ -1,8 +1,5 @@
 # OMAR Config Server
 
-## Source Location
-https://github.com/ossimlabs/omar-config-server
-
 ## Purpose
 
 The omar-config-server is responsible for handing out configurations to each OMAR application by managing a repository of application configuration files. These files can be gathered from each application's installation guides.
