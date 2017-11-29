@@ -6,7 +6,6 @@ buildscript {
      dockerStatementsOverride = {
        [
           "FROM ${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}",
-          "MAINTAINER DigitalGlobe-RadiantBlue",
 	        "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar \$HOME/",
           "EXPOSE 8888",
           "WORKDIR \$HOME",
@@ -57,7 +56,7 @@ repositories {
 
 dependencies {
   compile "de.codecentric:spring-boot-admin-starter-client:1.5.4"
-  
+
   compile('org.springframework.cloud:spring-cloud-config-server')
 	compile('org.codehaus.groovy:groovy')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
