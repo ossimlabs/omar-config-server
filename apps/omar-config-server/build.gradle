@@ -1,23 +1,27 @@
+//import com.palominolabs.gradle.task.git.clone.GitCloneTask
 
 buildscript {
 	ext {
-	   springBootVersion = '1.5.9.RELEASE'
-     baseImage = "omar-base"
-     dockerStatementsOverride = {
-       [
-          "FROM ${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}",
-	  "ENV HOME=/home/omar",
-          "MAINTAINER DigitalGlobe-RadiantBlue",
-	  "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar \$HOME/",
-          "EXPOSE 8888",
-          "WORKDIR \$HOME",
-          "USER root",
-          "RUN chmod 755 /home/omar && chmod 644 /home/omar/*",
-          "USER 1001",
-          "CMD java -Xms256m -Xmx1024m -Djava.security.egd=file:/dev/./urandom -jar ./${project.name}-${buildVersion}-${buildVersionTag}.jar"
-          ]
-     }
-	}
+        springBootVersion = '1.5.9.RELEASE'
+        baseImage = "omar-base"
+        dockerStatementsOverride = {
+            [
+                    "FROM ${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}",
+                    "ENV HOME=/home/omar",
+                    "MAINTAINER DigitalGlobe-RadiantBlue",
+                    "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar \$HOME/",
+                    "EXPOSE 8888",
+                    "WORKDIR \$HOME",
+                    "RUN yum install -y git",
+                    "RUN yum install crontab",
+                    "RUN (crontab -l ; echo \"00 * * * * echo hello cron\") | crontab",
+                    "USER root",
+                    "RUN chmod 755 /home/omar && chmod 644 /home/omar/*",
+                    "USER 1001",
+                    "CMD java -Xms256m -Xmx1024m -Djava.security.egd=file:/dev/./urandom -jar ./${project.name}-${buildVersion}-${buildVersionTag}.jar"
+            ]
+        }
+    }
   if(System.env.OMAR_COMMON_PROPERTIES)
   {
    apply from: System.env.OMAR_COMMON_PROPERTIES
@@ -34,7 +38,8 @@ buildscript {
         classpath 'com.bmuschko:gradle-docker-plugin:3.0.6'
         classpath 'com.github.skhatri:gradle-s3-plugin:1.0.4'
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
-		    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        //classpath 'com.palominolabs.gradle.task:gradle-git-clone-task:0.0.2'
 	}
 }
 
@@ -78,3 +83,11 @@ publishing {
     }
   }
 }
+//
+//task cloneConfigRepo(type: GitCloneTask) {
+//    dir = file("$buildDir/config-repo")
+//    uri = 'git@github.com:radiantbluetechnologies/config-repo.git'
+//    treeish = 'origin/dev'
+//}
+//
+//tasks.getByName("build").dependsOn cloneConfigRepo
