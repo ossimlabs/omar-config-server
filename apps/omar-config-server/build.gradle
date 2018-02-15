@@ -14,7 +14,7 @@ buildscript {
                     "WORKDIR \$HOME",
                     "USER root",
                     "RUN yum install -y git",
-                    "RUN yum install -y crontab",
+                    "RUN yum install -y vixie-cron; service crond start; chkconfig crond on;",
                     "RUN (crontab -l ; echo \"00 * * * * echo hello cron\") | crontab",
                     "RUN chmod 755 /home/omar && chmod 644 /home/omar/*",
                     "USER 1001",
