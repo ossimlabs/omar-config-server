@@ -12,10 +12,10 @@ buildscript {
                     "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar \$HOME/",
                     "EXPOSE 8888",
                     "WORKDIR \$HOME",
-                    "RUN yum install -y git",
-                    "RUN yum install crontab",
-                    "RUN (crontab -l ; echo \"00 * * * * echo hello cron\") | crontab",
                     "USER root",
+                    "RUN yum install -y git",
+                    "RUN yum install -y crontab",
+                    "RUN (crontab -l ; echo \"00 * * * * echo hello cron\") | crontab",
                     "RUN chmod 755 /home/omar && chmod 644 /home/omar/*",
                     "USER 1001",
                     "CMD java -Xms256m -Xmx1024m -Djava.security.egd=file:/dev/./urandom -jar ./${project.name}-${buildVersion}-${buildVersionTag}.jar"
