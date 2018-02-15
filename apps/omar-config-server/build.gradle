@@ -31,12 +31,17 @@ buildscript {
       }
 	}
 	dependencies {
-        classpath 'com.bmuschko:gradle-docker-plugin:3.0.6'
+        classpath "com.bmuschko:gradle-docker-plugin:${gradleDockerPluginV}"
         classpath 'com.github.skhatri:gradle-s3-plugin:1.0.4'
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
 		    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
+
+plugins {
+  id "com.github.ben-manes.versions" version "0.17.0"
+}
+
 
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
@@ -57,7 +62,7 @@ repositories {
 
 
 dependencies {
-  compile "de.codecentric:spring-boot-admin-starter-client:1.5.4"
+  compile "de.codecentric:spring-boot-admin-starter-client:${springBootAdminStarterClientV}"
 
   compile('org.springframework.cloud:spring-cloud-config-server')
 	compile('org.codehaus.groovy:groovy')
