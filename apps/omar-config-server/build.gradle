@@ -1,7 +1,12 @@
 
 buildscript {
+  if(System.env.OMAR_COMMON_PROPERTIES)
+  {
+   apply from: System.env.OMAR_COMMON_PROPERTIES
+  }
+ 
 	ext {
-	   springBootVersion = '1.5.9.RELEASE'
+	   springBootVersion = "${springBootV}"
      baseImage = "omar-base"
      dockerStatementsOverride = {
        [
@@ -18,10 +23,10 @@ buildscript {
           ]
      }
 	}
-  if(System.env.OMAR_COMMON_PROPERTIES)
+/*  if(System.env.OMAR_COMMON_PROPERTIES)
   {
    apply from: System.env.OMAR_COMMON_PROPERTIES
-  }
+  }*/
  	repositories {
       mavenLocal()
       maven { url "${ossimMavenProxy}" }
@@ -71,7 +76,7 @@ dependencies {
 
 dependencyManagement {
 	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Dalston.SR5"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudDependencyV}"
 	}
 }
 
