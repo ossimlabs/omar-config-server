@@ -1,18 +1,18 @@
 //import com.palominolabs.gradle.task.git.clone.GitCloneTask
 
 buildscript {
+    ext {
+      baseImage = "omar-base"      
+    }
   	if(System.env.OMAR_COMMON_PROPERTIES)
   	{
    		apply from: System.env.OMAR_COMMON_PROPERTIES
   	}
-
-	ext {
+  	ext {
 	   springBootVersion = "${springBootV}"
-     baseImage = "omar-base"
      dockerStatementsOverride = {
        [
-          //"FROM ${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}",
-          "FROM ${project.dockerNamespaceUrl}${baseImage}:${project.dockerAppTag}",          
+          "FROM ${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}",
           "ENV HOME=/home/omar",
           "MAINTAINER DigitalGlobe-RadiantBlue",
 	        "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar \$HOME/",
