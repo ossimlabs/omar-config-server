@@ -1,32 +1,30 @@
 //import com.palominolabs.gradle.task.git.clone.GitCloneTask
 
 buildscript {
+  	if(System.env.OMAR_COMMON_PROPERTIES)
+  	{
+   		apply from: System.env.OMAR_COMMON_PROPERTIES
+  	}
+
 	ext {
-        springBootVersion = '1.5.9.RELEASE'
-        baseImage = "omar-base"
-        dockerStatementsOverride = {
-            [
-                    "FROM ${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}",
-                    "ENV HOME=/home/omar",
-                    "MAINTAINER DigitalGlobe-RadiantBlue",
-                    "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar \$HOME/",
-                    "EXPOSE 8888",
-                    "WORKDIR \$HOME",
-                    "USER root",
-                    "RUN yum install -y git",
-                    "RUN yum install -y cronie; service crond start; chkconfig crond on;",
-                    "RUN (crontab -l ; echo \"00 * * * * echo hello cron\") | crontab",
-                    "RUN chmod 755 /home/omar && chmod 644 /home/omar/*",
-                    "USER 1001",
-                    "CMD java -Xms256m -Xmx1024m -Djava.security.egd=file:/dev/./urandom -jar ./${project.name}-${buildVersion}-${buildVersionTag}.jar"
-            ]
-        }
-    }
-  if(System.env.OMAR_COMMON_PROPERTIES)
-  {
-   apply from: System.env.OMAR_COMMON_PROPERTIES
-  }
- 	repositories {
+	   springBootVersion = "${springBootV}"
+     baseImage = "omar-base"
+     dockerStatementsOverride = {
+       [
+          "FROM ${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}",
+	  "ENV HOME=/home/omar",
+          "MAINTAINER DigitalGlobe-RadiantBlue",
+	  "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar \$HOME/",
+          "EXPOSE 8888",
+          "WORKDIR \$HOME",
+          "USER root",
+          "RUN chmod 755 /home/omar && chmod 644 /home/omar/*",
+          "USER 1001",
+          "CMD java -Xms256m -Xmx1024m -Djava.security.egd=file:/dev/./urandom -jar ./${project.name}-${buildVersion}-${buildVersionTag}.jar"
+          ]
+     }
+	}
+	repositories {
       mavenLocal()
       maven { url "${ossimMavenProxy}" }
       mavenCentral()
@@ -35,7 +33,7 @@ buildscript {
       }
 	}
 	dependencies {
-        classpath 'com.bmuschko:gradle-docker-plugin:3.0.6'
+        classpath "com.bmuschko:gradle-docker-plugin:${gradleDockerPluginV}"
         classpath 'com.github.skhatri:gradle-s3-plugin:1.0.4'
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -43,9 +41,13 @@ buildscript {
 	}
 }
 
+plugins {
+  id "com.github.ben-manes.versions" version "0.17.0"
+}
+
+
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
-//apply plugin: 'spring-boot'
 apply plugin: 'org.springframework.boot'
 apply plugin: "java"
 apply plugin: "maven-publish"
@@ -63,7 +65,7 @@ repositories {
 
 
 dependencies {
-  compile "de.codecentric:spring-boot-admin-starter-client:1.5.4"
+  compile "de.codecentric:spring-boot-admin-starter-client:${springBootAdminStarterClientV}"
 
   compile('org.springframework.cloud:spring-cloud-config-server')
 	compile('org.codehaus.groovy:groovy')
@@ -72,7 +74,7 @@ dependencies {
 
 dependencyManagement {
 	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Dalston.SR5"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudDependencyV}"
 	}
 }
 
