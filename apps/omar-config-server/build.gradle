@@ -1,16 +1,7 @@
-//import com.palominolabs.gradle.task.git.clone.GitCloneTask
-
 buildscript {
     ext {
-      baseImage = "omar-base"      
-    }
-  	if(System.env.OMAR_COMMON_PROPERTIES)
-  	{
-   		apply from: System.env.OMAR_COMMON_PROPERTIES
-  	}
-  	ext {
-	   springBootVersion = "${springBootV}"
-     dockerStatementsOverride = {
+      baseImage = "omar-base"
+      dockerStatementsOverride = {
        [
           "FROM ${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}",
           "ENV HOME=/home/omar",
@@ -22,9 +13,19 @@ buildscript {
           "RUN chmod 755 /home/omar && chmod 644 /home/omar/*",
           "USER 1001",
           "CMD java -Xms256m -Xmx1024m -Djava.security.egd=file:/dev/./urandom -jar ./${project.name}-${buildVersion}-${buildVersionTag}.jar"
-          ]
-     }
-	}
+        ]
+      }
+    }
+
+  	if(System.env.OMAR_COMMON_PROPERTIES)
+  	{
+   		apply from: System.env.OMAR_COMMON_PROPERTIES
+  	}
+
+  	ext {
+	   springBootVersion = "${springBootV}"
+	 }
+   
 	repositories {
       mavenLocal()
       maven { url "${ossimMavenProxy}" }
@@ -37,8 +38,7 @@ buildscript {
         classpath "com.bmuschko:gradle-docker-plugin:${gradleDockerPluginV}"
         classpath 'com.github.skhatri:gradle-s3-plugin:1.0.4'
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        //classpath 'com.palominolabs.gradle.task:gradle-git-clone-task:0.0.2'
+		    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
 
@@ -86,11 +86,3 @@ publishing {
     }
   }
 }
-//
-//task cloneConfigRepo(type: GitCloneTask) {
-//    dir = file("$buildDir/config-repo")
-//    uri = 'git@github.com:radiantbluetechnologies/config-repo.git'
-//    treeish = 'origin/dev'
-//}
-//
-//tasks.getByName("build").dependsOn cloneConfigRepo
