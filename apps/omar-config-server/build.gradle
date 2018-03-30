@@ -25,13 +25,15 @@ buildscript {
   	ext {
 	   springBootVersion = "${springBootV}"
 	 }
-   
+
 	repositories {
-      mavenLocal()
       maven { url "${ossimMavenProxy}" }
-      mavenCentral()
-      maven {
-        url "https://plugins.gradle.org/m2/"
+      if( Boolean.parseBoolean( System.env.WWW_CONNECTED ) ) {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
       }
 	}
 	dependencies {
@@ -59,9 +61,11 @@ targetCompatibility = 1.8
 group "io.ossim.omar.apps"
 
 repositories {
-  mavenLocal()
   maven { url "${ossimMavenProxy}" }
-  mavenCentral()
+  if( Boolean.parseBoolean( System.env.WWW_CONNECTED ) ) {
+    mavenLocal()
+    mavenCentral()
+  }
 }
 
 
