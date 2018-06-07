@@ -21,3 +21,4 @@ spring:
           uri: https://github.com/radiantbluetechnologies/config-repo
           username: ${GIT_USER_NAME}
           password: ${GIT_PASSWORD}
+          searchPaths: 'spring'
