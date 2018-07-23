@@ -1,5 +1,7 @@
 # omar-config-server
 
+## Description
+
 The OMAR Spring Configuration Server is used to hand configuration files out to the various OMAR Spring micro services.
 
 The config-server can be used in two primary profile configurations:
