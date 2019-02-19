@@ -1,7 +1,7 @@
 buildscript {
    repositories {
       mavenLocal()
-      maven { url "${ossimMavenProxy}" }
+      maven { url ossimMavenProxy }
    }
 	dependencies {
         classpath 'com.github.skhatri:gradle-s3-plugin:1.0.4'
