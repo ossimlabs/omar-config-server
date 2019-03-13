@@ -1,18 +1,9 @@
 pluginManagement {
   repositories {
-    maven { url "${ System.getenv('REPOSITORY_MANAGER_URL') }/ossim-deps" }
-    gradlePluginPortal()
+    maven { url ossimMavenProxy }
   }
 }
 
-def final O2_DEV_HOME = System.getenv('O2_DEV_HOME')
+include 'omar-config-server'
 
-if ( O2_DEV_HOME ) {
-
-   include 'omar-config-server' //,
-//	   'omar-core-plugin'
-
-   project(':omar-config-server').projectDir = "${O2_DEV_HOME}/omar-config-server/apps/omar-config-server" as File
-//   project(':omar-core-plugin').projectDir = "${O2_DEV_HOME}/omar-core/plugins/omar-core-plugin" as File
-
-}
+project(':omar-config-server').projectDir = "${rootProject.projectDir}/apps/omar-config-server" as File

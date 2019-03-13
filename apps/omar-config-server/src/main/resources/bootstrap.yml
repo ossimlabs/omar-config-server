@@ -31,6 +31,6 @@ spring:
     config:
       server:
         git:
-          uri: file://${O2_DEV_HOME}/config-repo
+          uri: file://../config-repo
           searchPaths: 'spring-config'
           label: dev
