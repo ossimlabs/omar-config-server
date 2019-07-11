@@ -26,7 +26,7 @@ The server can be deployed into one of two modes:
 
 By default, no environment variables are required. If none are specified the SPRING_PROFILES_ACTIVE is assumed to be 'native'
 
-### An Example DeploymentConfig
+## Example Openshift Deployment Config
 
 ```yaml
 apiVersion: v1
