@@ -6,7 +6,7 @@ buildscript {
 	dependencies {
         // classpath 'com.github.skhatri:gradle-s3-plugin:1.0.4'
         // classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.7.5"
-        classpath 'com.bmuschko:gradle-docker-plugin:5.1.0'
+		classpath 'com.bmuschko:gradle-docker-plugin:3.0.12'
         classpath 'io.ossim:gradleDefaults:1.8-SNAPSHOT'
 	}
 }
@@ -25,8 +25,32 @@ io.ossim.gradleDefaults.Variables.setVersionVariables(project)
 dockerBuildDir="${rootProject.projectDir}/docker"
 version "${buildVersion}-${buildVersionTag}"
 jarDestination = "${projectDir}/build/libs/${project.name}-${version}.jar"
-io.ossim.gradleDefaults.Docker.addDockerTasks(project, dockerRegistryUrl, dockerRegistryUsername, dockerRegistryPassword, name, dockerImageTag, dockerBuildDir, jarDestination, ["BASE_IMAGE": "${dockerRegistryUrl}/${dockerBaseImage}:${dockerFromTag}"])
-io.ossim.gradleDefaults.Openshift.addOpenshiftTasks(project, openshiftUrl, openshiftUsername, openshiftPassword, openshiftProjectName, openshiftServiceName,  dockerRegistryUrl, name, dockerImageTag)
+
+// ['dockerRegistryUrl', 'dockerRegistryUsername', 'dockerRegistryPassword', 'name', 'dockerImageTag', 'dockerBuildDir', 'jarDestination'].each { println "${it}: ${project[it]}" }
+
+io.ossim.gradleDefaults.Docker.addDockerTasks(
+	project, 
+	dockerRegistryUrl, 
+	dockerRegistryUsername, 
+	dockerRegistryPassword, 
+	name, 
+	dockerImageTag, 
+	dockerBuildDir, 
+	jarDestination, 
+	["BASE_IMAGE": "${dockerRegistryUrl}/${dockerBaseImage}:${dockerFromTag}"]
+)
+
+io.ossim.gradleDefaults.Openshift.addOpenshiftTasks(
+	project, 
+	openshiftUrl, 
+	openshiftUsername, 
+	openshiftPassword, 
+	openshiftProjectName, 
+	openshiftServiceName,  
+	dockerRegistryUrl, 
+	name, 
+	dockerImageTag
+)
 
 sourceCompatibility = '1.8'
 
