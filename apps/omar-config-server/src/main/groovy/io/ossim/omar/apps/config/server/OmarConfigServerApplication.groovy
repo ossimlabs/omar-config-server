@@ -1,4 +1,4 @@
-package omar.config
+package io.ossim.omar.apps.config.server
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -9,6 +9,7 @@ import org.springframework.cloud.config.server.EnableConfigServer
 class OmarConfigServerApplication {
 
 	static void main(String[] args) {
-		SpringApplication.run OmarConfigServerApplication, args
+		SpringApplication.run(OmarConfigServerApplication, args)
 	}
+
 }

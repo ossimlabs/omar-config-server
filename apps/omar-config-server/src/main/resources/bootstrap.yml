@@ -1,6 +1,8 @@
+---
 server:
   port: 8888
-  contextPath: /omar-config-server
+  servlet:
+    context-path: /omar-config-server
 spring:
   profiles:
     active: native
@@ -11,7 +13,6 @@ spring:
           searchLocations: file:${HOME}/configs/,file:${HOME}/configs/{application},file:${HOME}/configs/{application}/{profile}
 
 ---
-
 spring:
   profiles: remote
   cloud:
@@ -31,6 +32,4 @@ spring:
     config:
       server:
         git:
-          uri: file://../config-repo
-          searchPaths: 'spring-config'
-          label: dev
+          uri: file://${PWD}/config-repo
