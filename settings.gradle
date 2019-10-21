@@ -7,3 +7,5 @@ pluginManagement {
 include 'omar-config-server'
 
 project(':omar-config-server').projectDir = "${rootProject.projectDir}/apps/omar-config-server" as File
+
+rootProject.name='omar-config-server'
