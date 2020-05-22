@@ -62,7 +62,7 @@ podTemplate(
           archiveArtifacts "apps/*/build/libs/*.jar"
         }
       }
-    /*stage ("Publish Nexus"){	
+    stage ("Publish Nexus"){	
       container('builder'){
           withCredentials([[$class: 'UsernamePasswordMultiBinding',
                           credentialsId: 'nexusCredentials',
@@ -75,7 +75,7 @@ podTemplate(
             """
           }
         }
-    }*/
+    }
     stage('Docker build') {
       container('docker') {
         withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_DOWNLOAD_URL}") {  //TODO
@@ -84,7 +84,6 @@ podTemplate(
           """
         }
       }
-    }
       stage('Docker push'){
         container('docker') {
           withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}") {
@@ -99,4 +98,5 @@ podTemplate(
       if ("${CLEAN_WORKSPACE}" == "true")
         step([$class: 'WsCleanup'])
     }
+  }
 }

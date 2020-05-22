@@ -27,6 +27,8 @@ apply plugin: 'com.bmuschko.docker-remote-api'
 
 io.ossim.gradleDefaults.Variables.setAdditionalVariables(project)
 io.ossim.gradleDefaults.Variables.setVersionVariables(project)
+io.ossim.gradleDefaults.Publications.addPublication(project, groupName, name, "${buildVersion}-${buildVersionTag}")
+io.ossim.gradleDefaults.Publications.addRepository(project, mavenPublishUrl, mavenRepoUsername, mavenRepoPassword)  
 version "${buildVersion}-${buildVersionTag}"
 
 ext {
