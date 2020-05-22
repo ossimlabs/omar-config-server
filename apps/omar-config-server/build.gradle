@@ -27,15 +27,13 @@ apply plugin: 'com.bmuschko.docker-remote-api'
 
 io.ossim.gradleDefaults.Variables.setAdditionalVariables(project)
 io.ossim.gradleDefaults.Variables.setVersionVariables(project)
-io.ossim.gradleDefaults.Publications.addPublication(project, groupName, name, "${buildVersion}-${buildVersionTag}")
-io.ossim.gradleDefaults.Publications.addRepository(project, mavenPublishUrl, mavenRepoUsername, mavenRepoPassword)  
 version "${buildVersion}-${buildVersionTag}"
 
 ext {
 	dockerBuildDir = "${ rootProject.projectDir }/docker"
 	jarDestination = "${ project.projectDir }/build/libs/${ project.name }-${ version }.jar"
 	
-	dockerImageName = project.name
+	dockerImageName = name
 	dockerBuildTag = project.dockerImageTag
 	buildArguments = [ "BASE_IMAGE": "${ dockerRegistryUrl }/${ dockerBaseImage }:${ dockerFromTag }" ]
 	
@@ -99,7 +97,18 @@ docker {
 		password = getConfigurationProperty( 'DOCKER_REGISTRY_PASSWORD', 'dockerRegistryPassword' )
 	}
 }
-
+ io.ossim.gradleDefaults.Openshift.addOpenshiftTasks(
+                project, 
+                openshiftUrl, 
+                openshiftUsername, 
+                openshiftPassword, 
+                openshiftProjectName, 
+                openshiftServiceName,  
+                dockerRegistryUrl, 
+                dockerImageName, 
+                dockerImageTag
+            )
+			
 // Copy the built jar to the docker directory
 task copyJarToDockerDir( type: Copy ) {
 	doFirst {
