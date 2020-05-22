@@ -97,18 +97,7 @@ docker {
 		password = getConfigurationProperty( 'DOCKER_REGISTRY_PASSWORD', 'dockerRegistryPassword' )
 	}
 }
- io.ossim.gradleDefaults.Openshift.addOpenshiftTasks(
-                project, 
-                openshiftUrl, 
-                openshiftUsername, 
-                openshiftPassword, 
-                openshiftProjectName, 
-                openshiftServiceName,  
-                dockerRegistryUrl, 
-                dockerImageName, 
-                dockerImageTag
-            )
-			
+
 // Copy the built jar to the docker directory
 task copyJarToDockerDir( type: Copy ) {
 	doFirst {
