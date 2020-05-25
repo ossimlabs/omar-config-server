@@ -80,16 +80,15 @@ podTemplate(
       container('docker') {
         withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_DOWNLOAD_URL}") {  //TODO
           sh """
-            docker build -t "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-omar-config-server-app:${BRANCH_NAME} ./docker
+            docker build -t "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-wms-app:${BRANCH_NAME} ./docker
           """
         }
       }
-    }
       stage('Docker push'){
         container('docker') {
           withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}") {
           sh """
-              docker push "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-omar-config-server-app:${BRANCH_NAME}
+              docker push "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-wms-app:${BRANCH_NAME}
           """
           }
         }
