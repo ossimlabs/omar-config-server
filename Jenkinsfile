@@ -74,7 +74,7 @@ podTemplate(
       container('docker') {
         withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_DOWNLOAD_URL}") {
           sh """
-            docker build --network=host -t "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-wms-app:${BRANCH_NAME} ./docker
+            docker build --network=host -t "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-config-server:${BRANCH_NAME} ./docker
           """
         }
       }
@@ -84,7 +84,7 @@ podTemplate(
       container('docker') {
         withDockerRegistry(credentialsId: 'dockerCredentials', url: "https://${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}") {
         sh """
-            docker push "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-wms-app:${BRANCH_NAME}
+            docker push "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-config-server:${BRANCH_NAME}
         """
         }
       }
