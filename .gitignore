@@ -10,3 +10,7 @@ build/
 .project
 .settings
 .classpath
+
+packaged-chart
+*.lock
+charts/*.tgz
