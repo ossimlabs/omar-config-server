@@ -55,7 +55,7 @@ podTemplate(
         preVERSION = readFile "buildVersion.txt"
         VERSION = preVERSION.substring(0, preVERSION.indexOf('\n'))
         
-        GIT_TAG_NAME = "omar-config-server" + "-" + VERSION
+        GIT_TAG_NAME = "omar-config-server" + "-" + VERSION //webhook stuff
         ARTIFACT_NAME = "ArtifactName"
         script {
           if (BRANCH_NAME != 'master') {
