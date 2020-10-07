@@ -137,7 +137,7 @@ podTemplate(
             }
             else if (BRANCH_NAME == 'dev') {
                 sh """
-                    docker tag "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-config-server-app:"${VERSION}".a "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-wms-app:dev
+                    docker tag "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-config-server-app:"${VERSION}".a "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-config-server-app:dev
                     docker push "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-config-server-app:"${VERSION}".a
                     docker push "${DOCKER_REGISTRY_PUBLIC_UPLOAD_URL}"/omar-config-server-app:dev
                 """
