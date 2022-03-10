@@ -48,36 +48,3 @@
 {{- end }}
 {{- end -}}
 
-
-
-
-
-{{/* Templates for the volumes section */}}
-
-{{- define "omar-config-server.volumes.configmaps" -}}
-{{- range $configmapName, $configmapDict := .Values.configmaps}}
-- name: {{ $configmapName | quote }}
-  configMap:
-    name: {{ $configmapName | quote }}
-{{- end -}}
-{{- end -}}
-
-{{- define "omar-config-server.volumes.pvcs" -}}
-{{- range $volumeName := .Values.volumeNames }}
-{{- $volumeDict := index $.Values.global.volumes $volumeName }}
-- name: {{ $volumeName }}
-  persistentVolumeClaim:
-    claimName: "{{ $.Values.appName }}-{{ $volumeName }}-pvc"
-{{- end -}}
-{{- end -}}
-
-{{- define "omar-config-server.volumes" -}}
-{{- include "omar-config-server.volumes.configmaps" . -}}
-{{- include "omar-config-server.volumes.pvcs" . -}}
-{{- if .Values.global.extraVolumes }}
-{{ toYaml .Values.global.extraVolumes }}
-{{- end }}
-{{- if .Values.extraVolumes }}
-{{ toYaml .Values.extraVolumes }}
-{{- end }}
-{{- end -}}
