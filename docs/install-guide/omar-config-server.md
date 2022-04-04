@@ -72,7 +72,7 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: remote
         image: 172.30.181.173:5000/o2/omar-config-server@sha256:8d8d8dd70494308cc46e6ccd4c62a6af0795251d204d34975dbe57c8df866b64
-        imagePullPolicy: Always
+        imagepullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
           initialDelaySeconds: 60
