@@ -34,10 +34,10 @@ resources:
   requests:
     cpu: 15m
     memory: 500Mi
-    
+
 image:
   name: omar-config-server
-  tag: dev
+  tag: null
   pullPolicy: IfNotPresent
 
 internalPort: 8888
@@ -63,8 +63,8 @@ readinessProbe:
 terminationGracePeriodSeconds: 30
 
 envVars:
-  GIT_USER_NAME: 
-  GIT_PASSWORD: 
+  GIT_USER_NAME:
+  GIT_PASSWORD:
   SPRING_PROFILES_ACTIVE: native
 
 configmaps: {}
