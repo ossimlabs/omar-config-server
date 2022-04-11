@@ -17,6 +17,8 @@ global:
   createImagePullSecret: true
   useImagePullSecret: true
 
+  deployment:
+    annotations: {}
 
 # These variables can be overridden because of the use of the 'pluck' function:
 # - createIngress
@@ -76,3 +78,6 @@ extraVolumeMounts: []
 extraInitContainers: []
 
 sideCars: []
+
+deployment:
+  annotations: {}
