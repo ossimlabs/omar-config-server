@@ -4,7 +4,7 @@
 
 replicas: 1
 
-appName: omar-config-server
+fullnameOverride: omar-config-server
 
 global:
   dockerRepository: nexus-docker-private-group.ossim.io
