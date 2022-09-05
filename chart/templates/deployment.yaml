@@ -60,18 +60,12 @@ spec:
             memory: {{ .Values.resources.requests.memory }}
         terminationMessagePath: /dev/termination-log
         volumeMounts:
-        - mountPath: /home/omar/configs
-          name: spring-config
+          {{- include "omar-config-server.volumeMounts" . | nindent 12 }}
       dnsPolicy: ClusterFirst
-      {{- if .Values.global.useImagePullSecret }}
-      imagePullSecrets:
-        - name: {{ .Values.fullnameOverride }}-pull-secret
-      {{- end }}
+      {{- include "omar-config-server.imagePullSecrets" . | indent 6 }}
       restartPolicy: Always
       securityContext: {}
       serviceAccountName: {{ include "omar-config-server.serviceAccount.name" . }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       volumes:
-      - name: spring-config
-        configMap:
-          name: {{ .Values.global.springConfigmapName }}
+        {{- include "omar-config-server.volumes" . | nindent 8 }}

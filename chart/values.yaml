@@ -8,10 +8,8 @@ fullnameOverride: omar-config-server
 
 global:
   dockerRepository: nexus-docker-private-group.ossim.io
-  imagePullSecret:
-    registry: null
-    username: null
-    password: null
+  image:
+    pullSecrets: []
   springConfigmapName: spring-config
 
   createImagePullSecret: true
