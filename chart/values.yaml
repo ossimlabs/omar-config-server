@@ -12,7 +12,6 @@ global:
     pullSecrets: []
   springConfigmapName: spring-config
 
-  createImagePullSecret: true
   useImagePullSecret: true
 
   deployment:
