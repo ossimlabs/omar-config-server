@@ -12,7 +12,7 @@ global:
     pullSecrets: []
   springConfigmapName: spring-config
 
-  useImagePullSecret: true
+  
 
   deployment:
     annotations: {}
