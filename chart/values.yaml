@@ -7,12 +7,15 @@ replicas: 1
 fullnameOverride: omar-config-server
 
 global:
-  dockerRepository: nexus-docker-private-group.ossim.io
+
   image:
     pullSecrets: []
   springConfigmapName: spring-config
 
-  
+  image:
+    registry: ""
+    pullPolicy: ""
+    pullSecrets: []
 
   deployment:
     annotations: {}
@@ -23,6 +26,9 @@ global:
     # name:
 
   envVars: {}
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
 
 # These variables can be overridden because of the use of the 'pluck' function:
 # - createIngress
@@ -85,6 +91,10 @@ sideCars: []
 
 deployment:
   annotations: {}
+
+nodeSelector: {}
+affinity: {}
+tolerations: []
 
 serviceAccount:
   # Specifies whether a service account should be created

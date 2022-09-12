@@ -2,8 +2,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels: {}
-  name: {{ .Values.fullnameOverride }}
+  labels:
+    {{- include "omar-config-server.labels" . | nindent 4 }}
+  name: {{ include "omar-config-server.fullname" . }}
   annotations:
   {{- range $key, $value := $annotations }}
     {{- $key | nindent 4 }}: {{ tpl $value $ | quote }}
@@ -12,11 +13,11 @@ spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.fullnameOverride }}
+      {{- include "omar-config-server.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ .Values.fullnameOverride }}
+        {{- include "omar-config-server.selectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.extraInitContainers }}
       {{- toYaml .Values.extraInitContainers | nindent 6 }}
@@ -25,7 +26,7 @@ spec:
       {{- if .Values.sideCars }}
       {{- toYaml .Values.sideCars | nindent 6 }}
       {{- end }}
-      - name:  {{ .Values.fullnameOverride }}
+      - name: {{ .Chart.Name }}
         env:
         {{- include "omar-config-server.envVars" . | nindent 8 }}
         image: {{ include "omar-config-server.image" . | quote }}
@@ -67,5 +68,17 @@ spec:
       securityContext: {}
       serviceAccountName: {{ include "omar-config-server.serviceAccount.name" . }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with merge .Values.nodeSelector .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with merge .Values.affinity .Values.global.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with concat .Values.tolerations .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
         {{- include "omar-config-server.volumes" . | nindent 8 }}
