@@ -1,6 +1,12 @@
 pluginManagement {
   repositories {
-    maven { url ossimMavenProxy }
+		maven {
+      url ossimMavenProxy
+      credentials {
+        username ossimMavenProxyUsername
+        password ossimMavenProxyPassword
+      }
+		}
   }
 }
 
