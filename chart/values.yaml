@@ -51,7 +51,7 @@ resources:
 image:
   name: omar-config-server
   tag: null
-  pullPolicy: IfNotPresent
+  pullPolicy: ""
 
 internalPort: 8888
 externalPort: 8888

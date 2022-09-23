@@ -34,7 +34,7 @@ spec:
           {{- tpl (toYaml .) $ | nindent 10 }}
           {{- end }}
         image: {{ include "omar-config-server.image" . | quote }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ include "omar-config-server.pullPolicy" . }}
         livenessProbe:
           failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
